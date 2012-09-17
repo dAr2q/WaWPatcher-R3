@@ -23,6 +23,6 @@ Public Class Form1
     End Function
 
     Private Sub Label1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Label1.Click
-        MsgBox(ProductName & vbNewLine & "a Simple Tool for patching World At War to Version 1.7" & vbNewLine & "-built for testing purposes only" & vbNewLine & "Es wird ein " & GetCpuMode() & " verwendet", MsgBoxStyle.Information, "about")
+        MsgBox(ProductName & vbNewLine & "a Simple Tool for patching World At War to Version 1.7" & vbNewLine & "-built for testing purposes only" & vbNewLine & vbNewLine & "Es wird ein " & GetCpuMode() & " verwendet", MsgBoxStyle.Information, "about")
     End Sub
 End Class
