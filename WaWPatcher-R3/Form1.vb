@@ -9,17 +9,23 @@ Public Class Form1
         If GetCpuMode() = "64Bit System" Then
             reg = _
              Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WoW6432Node\\Activision\\Call of Duty WAW", True)
-            TextBox1.Text = CStr(reg.GetValue("Version", True))
+            If reg Is Nothing Then
+                MsgBox("Das Spiel wurde nicht gefunden oder nicht richtig installiert", MsgBoxStyle.Information, "Nicht Gefunden")
+                Me.Close()
+            Else
+                MsgBox("Das Spiel wurde gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
+                TextBox1.Text = CStr(reg.GetValue("Version", True))
+            End If
         ElseIf GetCpuMode() = "32Bit System" Then
             reg = _
              Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Activision\\Call of Duty WAW", True)
-            TextBox1.Text = CStr(reg.GetValue("Version", True))
-        End If
-        If reg Is Nothing Then
-            MsgBox("Das Spiel wurde nicht gefunden oder nicht richtig installiert", MsgBoxStyle.Information, "Nicht Gefunden")
-            Me.Close()
-        Else
-            MsgBox("Das Spiel wurde gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
+            If reg Is Nothing Then
+                MsgBox("Das Spiel wurde nicht gefunden oder nicht richtig installiert", MsgBoxStyle.Information, "Nicht Gefunden")
+                Me.Close()
+            Else
+                MsgBox("Das Spiel wurde gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
+                TextBox1.Text = CStr(reg.GetValue("Version", True))
+            End If
         End If
         If TextBox1.Text = "1.7" Then
             MsgBox("Das Spiel wurde bereits auf die Version 1.7 gepatcht" & vbNewLine & "Deshalb wird das Programm jetzt beendet", MsgBoxStyle.Information, "bereits gepatcht")

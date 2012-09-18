@@ -1,8 +1,6 @@
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.exe
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.xml
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.pdb
-C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.exe.manifest
-C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.application
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.exe
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.pdb
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.xml
@@ -11,9 +9,6 @@ C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projec
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher_R3.Resources.resources
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\GenerateResource-ResGen.read.1.tlog
 C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\GenerateResource-ResGen.write.1.tlog
-C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.TrustInfo.xml
-C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.exe.manifest
-C:\Dokumente und Einstellungen\Besitzer\Eigene Dateien\Visual Studio 2010\Projects\WaWPatcher-R3\WaWPatcher-R3\obj\Debug\WaWPatcher-R3.application
 C:\Users\Steven\Documents\Visual Studio 2005\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.exe
 C:\Users\Steven\Documents\Visual Studio 2005\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.pdb
 C:\Users\Steven\Documents\Visual Studio 2005\Projects\WaWPatcher-R3\WaWPatcher-R3\bin\Debug\WaWPatcher-R3.xml
