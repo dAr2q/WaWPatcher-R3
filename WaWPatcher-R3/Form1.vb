@@ -1,11 +1,23 @@
-Option Strict On
 Imports System
 Imports System.IO
+Imports System.Diagnostics
 Imports Microsoft.Win32.Registry
 
 Public Class Form1
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim reg As Microsoft.Win32.RegistryKey
+        Dim U2L As Microsoft.Win32.RegistryKey
+        U2L = _
+                Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\U2L\\WAWPatcher\\3.0", True)
+        If U2L Is Nothing Then
+            U2L = _
+            Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\U2L\\WAWPatcher\\3.0")
+            U2L.SetValue("Version", "3.0.2.1")
+        End If
+        U2L.SetValue("LastRunDir", Path.GetDirectoryName(Application.ExecutablePath))
+        If Directory.Exists(Application.ExecutablePath) Then
+            MsgBox("Der Ordner Existiert")
+        End If
         If GetCpuMode() = "64Bit System" Then
             reg = _
              Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WoW6432Node\\Activision\\Call of Duty WAW", True)
@@ -13,23 +25,36 @@ Public Class Form1
                 MsgBox("Das Spiel wurde nicht gefunden oder nicht richtig installiert", MsgBoxStyle.Information, "Nicht Gefunden")
                 Me.Close()
             Else
-                MsgBox("Das Spiel wurde gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
                 TextBox1.Text = CStr(reg.GetValue("Version", True))
+                If reg.GetValue("Language") Is "enu" Then
+                    MsgBox("Es wurde die englische Version gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
+                ElseIf reg.GetValue("Language") = Nothing Then
+                    MsgBox("Es wurde keine englische Version erkannt" & vbNewLine & "Damit das Programm richtig funktioniert, muss die englische Version installiert sein." & vbNewLine & vbNewLine & "Deshalb wird das Programm nun beendet.", MsgBoxStyle.Critical, "Falsche Spieleversion")
+                    Me.Close()
+                End If
             End If
         ElseIf GetCpuMode() = "32Bit System" Then
             reg = _
-             Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Activision\\Call of Duty WAW", True)
+     Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Activision\\Call of Duty WAW", True)
             If reg Is Nothing Then
                 MsgBox("Das Spiel wurde nicht gefunden oder nicht richtig installiert", MsgBoxStyle.Information, "Nicht Gefunden")
                 Me.Close()
             Else
-                MsgBox("Das Spiel wurde gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
                 TextBox1.Text = CStr(reg.GetValue("Version", True))
+                If reg.GetValue("Language") Is "enu" Then
+                    MsgBox("Es wurde die englische Version gefunden", MsgBoxStyle.Information, "Spiel Gefunden")
+                ElseIf reg.GetValue("Language") = Nothing Then
+                    MsgBox("Es wurde keine englische Version erkannt" & vbNewLine & "Damit das Programm richtig funktioniert, muss die englische Version installiert sein." & vbNewLine & vbNewLine & "Deshalb wird das Programm nun beendet.", MsgBoxStyle.Critical, "Falsche Spieleversion")
+                    Me.Close()
+                End If
             End If
         End If
+        ProgressBar1.Minimum = 0
+        ProgressBar1.Maximum = 100
+        ProgressBar1.Value = 0
         If TextBox1.Text = "1.7" Then
-            MsgBox("Das Spiel wurde bereits auf die Version 1.7 gepatcht" & vbNewLine & "Deshalb wird das Programm jetzt beendet", MsgBoxStyle.Information, "bereits gepatcht")
-            Me.Close()
+            Button2.Enabled = False
+            MsgBox("Das Spiel wurde bereits auf die Version 1.7 gepatcht", MsgBoxStyle.Information, "bereits gepatcht")
         End If
     End Sub
     Private Function GetCpuMode() As String
@@ -39,6 +64,207 @@ Public Class Form1
     End Function
 
     Private Sub Label1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Label1.Click
-        MsgBox(ProductName & vbNewLine & "a Simple Tool for patching World At War to Version 1.7" & vbNewLine & "-built for testing purposes only" & vbNewLine & vbNewLine & "Es wird ein " & GetCpuMode() & " verwendet", MsgBoxStyle.Information, "about")
+        Dim gamename As String
+        gamename = "'Call of Duty: World At War'"
+        MsgBox(ProductName & vbNewLine & "Ein einfaches Tool um " & gamename & " auf die Version 1.7 zu patchen." & vbNewLine & vbNewLine & "Du verwendest ein " & GetCpuMode(), MsgBoxStyle.Information, "Info")
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        BackgroundWorker1.RunWorkerAsync()
+        If BackgroundWorker1.IsBusy = True Then
+            Button2.Enabled = False
+            Button2.Text = "warten..."
+        End If
+    End Sub
+    Private Sub BackgroundWorker1_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) Handles BackgroundWorker1.ProgressChanged
+        Dim gamename As String
+        gamename = "'Call of Duty: World At War'"
+        Dim reg As Microsoft.Win32.RegistryKey
+        If GetCpuMode() = "64Bit System" Then
+            reg = _
+             Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WoW6432Node\\Activision\\Call of Duty WAW", True)
+        ElseIf GetCpuMode() = "32Bit System" Then
+            reg = _
+             Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Activision\\Call of Duty WAW", True)
+        End If
+        ProgressBar1.Value = e.ProgressPercentage
+        If ProgressBar1.Value = 100 Then
+            MsgBox(gamename & " wurde auf die Version 1.7 gepatcht.", MsgBoxStyle.Information, "Erfolgreich")
+            TextBox1.Text = reg.GetValue("Version", True)
+            Button2.Text = "Fertig"
+        End If
+    End Sub
+    Private Sub BackgroundWorker1_DoWork(sender As Object, e As ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
+        Dim gamename As String
+        gamename = "'Call of Duty: World At War'"
+        Dim reg As Microsoft.Win32.RegistryKey
+        Dim gamepath As String
+        If GetCpuMode() = "64Bit System" Then
+            reg = _
+             Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WoW6432Node\\Activision\\Call of Duty WAW", True)
+            gamepath = CStr(reg.GetValue("InstallPath", True))
+        ElseIf GetCpuMode() = "32Bit System" Then
+            reg = _
+             Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Activision\\Call of Duty WAW", True)
+            gamepath = CStr(reg.GetValue("InstallPath", True))
+        End If
+        File.Copy("res\version.u2l", gamepath & "version.inf", True)
+        BackgroundWorker1.ReportProgress((1 / 78) * 100)
+        File.Copy("res\GameSP.u2l", gamepath & "CoDWaW.exe", True)
+        BackgroundWorker1.ReportProgress((2 / 78) * 100)
+        File.Copy("res\GameMP.u2l", gamepath & "CoDWaWmp.exe", True)
+        BackgroundWorker1.ReportProgress((3 / 78) * 100)
+        File.Copy("res\main\iw_21.u2l", gamepath & "main\iw_21.iwd", True)
+        BackgroundWorker1.ReportProgress((4 / 78) * 100)
+        File.Copy("res\main\iw_22.u2l", gamepath & "main\iw_22.iwd", True)
+        BackgroundWorker1.ReportProgress((5 / 78) * 100)
+        File.Copy("res\main\iw_23.u2l", gamepath & "main\iw_23.iwd", True)
+        BackgroundWorker1.ReportProgress((6 / 78) * 100)
+        File.Copy("res\main\iw_24.u2l", gamepath & "main\iw_24.iwd", True)
+        BackgroundWorker1.ReportProgress((7 / 78) * 100)
+        File.Copy("res\main\iw_25.u2l", gamepath & "main\iw_25.iwd", True)
+        BackgroundWorker1.ReportProgress((8 / 78) * 100)
+        File.Copy("res\main\iw_26.u2l", gamepath & "main\iw_26.iwd", True)
+        BackgroundWorker1.ReportProgress((9 / 78) * 100)
+        File.Copy("res\main\iw_27.u2l", gamepath & "main\iw_27.iwd", True)
+        BackgroundWorker1.ReportProgress((10 / 78) * 100)
+        File.Copy("res\main\localized_english_iw04.u2l", gamepath & "main\localized_english_iw04.iwd", True)
+        BackgroundWorker1.ReportProgress((11 / 78) * 100)
+        File.Copy("res\main\localized_english_iw05.u2l", gamepath & "main\localized_english_iw05.iwd", True)
+        BackgroundWorker1.ReportProgress((12 / 78) * 100)
+        File.Copy("res\main\localized_english_iw06.u2l", gamepath & "main\localized_english_iw06.iwd", True)
+        BackgroundWorker1.ReportProgress((13 / 78) * 100)
+        File.Copy("res\main\video\nazi_zombie_asylum_load.u2l", gamepath & "main\video\nazi_zombie_asylum_load.bik", True)
+        BackgroundWorker1.ReportProgress((14 / 78) * 100)
+        File.Copy("res\main\video\nazi_zombie_factory_load.u2l", gamepath & "main\video\nazi_zombie_factory_load.bik", True)
+        BackgroundWorker1.ReportProgress((15 / 78) * 100)
+        File.Copy("res\main\video\nazi_zombie_sumpf_load.u2l", gamepath & "main\video\nazi_zombie_sumpf_load.bik", True)
+        BackgroundWorker1.ReportProgress((16 / 78) * 100)
+        File.Copy("res\zone\english\default.u2l", gamepath & "zone\english\default.ff", True)
+        BackgroundWorker1.ReportProgress((17 / 78) * 100)
+        File.Copy("res\zone\english\patch.u2l", gamepath & "zone\english\patch.ff", True)
+        BackgroundWorker1.ReportProgress((18 / 78) * 100)
+        File.Copy("res\zone\english\patch_mp.u2l", gamepath & "zone\english\patch_mp.ff", True)
+        BackgroundWorker1.ReportProgress((19 / 78) * 100)
+        File.Copy("res\zone\english\ui_mp.u2l", gamepath & "zone\english\ui_mp.ff", True)
+        BackgroundWorker1.ReportProgress((20 / 78) * 100)
+        File.Copy("res\zone\english\common_mp.u2l", gamepath & "zone\english\common_mp.ff", True)
+        BackgroundWorker1.ReportProgress((21 / 78) * 100)
+        File.Copy("res\zone\english\code_post_gfx_mp.u2l", gamepath & "zone\english\code_post_gfx_mp.ff", True)
+        BackgroundWorker1.ReportProgress((22 / 78) * 100)
+        File.Copy("res\zone\english\localized_code_post_gfx_mp.u2l", gamepath & "zone\english\localized_code_post_gfx_mp.ff", True)
+        BackgroundWorker1.ReportProgress((23 / 78) * 100)
+        File.Copy("res\zone\english\localized_common_mp.u2l", gamepath & "zone\english\localized_common_mp.ff", True)
+        BackgroundWorker1.ReportProgress((24 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_bgate.u2l", gamepath & "zone\english\localized_mp_bgate.ff", True)
+        BackgroundWorker1.ReportProgress((25 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_docks.u2l", gamepath & "zone\english\localized_mp_docks.ff", True)
+        BackgroundWorker1.ReportProgress((26 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_drum.u2l", gamepath & "zone\english\localized_mp_drum.ff", True)
+        BackgroundWorker1.ReportProgress((27 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_kneedeep.u2l", gamepath & "zone\english\localized_mp_kneedeep.ff", True)
+        BackgroundWorker1.ReportProgress((28 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_kwai.u2l", gamepath & "zone\english\localized_mp_kwai.ff", True)
+        BackgroundWorker1.ReportProgress((29 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_makin_day.u2l", gamepath & "zone\english\localized_mp_makin_day.ff", True)
+        BackgroundWorker1.ReportProgress((30 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_nachtfeuer.u2l", gamepath & "zone\english\localized_mp_nachtfeuer.ff", True)
+        BackgroundWorker1.ReportProgress((31 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_stalingrad.u2l", gamepath & "zone\english\localized_mp_stalingrad.ff", True)
+        BackgroundWorker1.ReportProgress((32 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_subway.u2l", gamepath & "zone\english\localized_mp_subway.ff", True)
+        BackgroundWorker1.ReportProgress((33 / 78) * 100)
+        File.Copy("res\zone\english\localized_mp_vodka.u2l", gamepath & "zone\english\localized_mp_vodka.ff", True)
+        BackgroundWorker1.ReportProgress((34 / 78) * 100)
+        File.Copy("res\zone\english\localized_nazi_zombie_asylum.u2l", gamepath & "zone\english\localized_nazi_zombie_asylum.ff", True)
+        BackgroundWorker1.ReportProgress((35 / 78) * 100)
+        File.Copy("res\zone\english\localized_nazi_zombie_factory.u2l", gamepath & "zone\english\localized_nazi_zombie_factory.ff", True)
+        BackgroundWorker1.ReportProgress((36 / 78) * 100)
+        File.Copy("res\zone\english\localized_nazi_zombie_sumpf.u2l", gamepath & "zone\english\localized_nazi_zombie_sumpf.ff", True)
+        BackgroundWorker1.ReportProgress((37 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_asylum.u2l", gamepath & "zone\english\nazi_zombie_asylum.ff", True)
+        BackgroundWorker1.ReportProgress((38 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_asylum_load.u2l", gamepath & "zone\english\nazi_zombie_asylum_load.ff", True)
+        BackgroundWorker1.ReportProgress((39 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_asylum_patch.u2l", gamepath & "zone\english\nazi_zombie_asylum_patch.ff", True)
+        BackgroundWorker1.ReportProgress((40 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_factory.u2l", gamepath & "zone\english\nazi_zombie_factory.ff", True)
+        BackgroundWorker1.ReportProgress((41 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_factory_load.u2l", gamepath & "zone\english\nazi_zombie_factory_load.ff", True)
+        BackgroundWorker1.ReportProgress((42 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_factory_patch.u2l", gamepath & "zone\english\nazi_zombie_factory_patch.ff", True)
+        BackgroundWorker1.ReportProgress((43 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_sumpf.u2l", gamepath & "zone\english\nazi_zombie_sumpf.ff", True)
+        BackgroundWorker1.ReportProgress((44 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_sumpf_load.u2l", gamepath & "zone\english\nazi_zombie_sumpf_load.ff", True)
+        BackgroundWorker1.ReportProgress((45 / 78) * 100)
+        File.Copy("res\zone\english\nazi_zombie_sumpf_patch.u2l", gamepath & "zone\english\nazi_zombie_sumpf_patch.ff", True)
+        BackgroundWorker1.ReportProgress((46 / 78) * 100)
+        File.Copy("res\zone\english\mp_airfield.u2l", gamepath & "zone\english\mp_airfield.ff", True)
+        BackgroundWorker1.ReportProgress((47 / 78) * 100)
+        File.Copy("res\zone\english\mp_asylum.u2l", gamepath & "zone\english\mp_asylum.ff", True)
+        BackgroundWorker1.ReportProgress((48 / 78) * 100)
+        File.Copy("res\zone\english\mp_bgate.u2l", gamepath & "zone\english\mp_bgate.ff", True)
+        BackgroundWorker1.ReportProgress((49 / 78) * 100)
+        File.Copy("res\zone\english\mp_bgate_load.u2l", gamepath & "zone\english\mp_bgate_load.ff", True)
+        BackgroundWorker1.ReportProgress((50 / 78) * 100)
+        File.Copy("res\zone\english\mp_castle.u2l", gamepath & "zone\english\mp_castle.ff", True)
+        BackgroundWorker1.ReportProgress((51 / 78) * 100)
+        File.Copy("res\zone\english\mp_courtyard.u2l", gamepath & "zone\english\mp_courtyard.ff", True)
+        BackgroundWorker1.ReportProgress((52 / 78) * 100)
+        File.Copy("res\zone\english\mp_docks.u2l", gamepath & "zone\english\mp_docks.ff", True)
+        BackgroundWorker1.ReportProgress((53 / 78) * 100)
+        File.Copy("res\zone\english\mp_docks_load.u2l", gamepath & "zone\english\mp_docks_load.ff", True)
+        BackgroundWorker1.ReportProgress((54 / 78) * 100)
+        File.Copy("res\zone\english\mp_downfall.u2l", gamepath & "zone\english\mp_downfall.ff", True)
+        BackgroundWorker1.ReportProgress((55 / 78) * 100)
+        File.Copy("res\zone\english\mp_drum.u2l", gamepath & "zone\english\mp_drum.ff", True)
+        BackgroundWorker1.ReportProgress((56 / 78) * 100)
+        File.Copy("res\zone\english\mp_drum_load.u2l", gamepath & "zone\english\mp_drum_load.ff", True)
+        BackgroundWorker1.ReportProgress((57 / 78) * 100)
+        File.Copy("res\zone\english\mp_hangar.u2l", gamepath & "zone\english\mp_hangar.ff", True)
+        BackgroundWorker1.ReportProgress((58 / 78) * 100)
+        File.Copy("res\zone\english\mp_kneedeep.u2l", gamepath & "zone\english\mp_kneedeep.ff", True)
+        BackgroundWorker1.ReportProgress((59 / 78) * 100)
+        File.Copy("res\zone\english\mp_kneedeep_load.u2l", gamepath & "zone\english\mp_kneedeep_load.ff", True)
+        BackgroundWorker1.ReportProgress((60 / 78) * 100)
+        File.Copy("res\zone\english\mp_kwai.u2l", gamepath & "zone\english\mp_kwai.ff", True)
+        BackgroundWorker1.ReportProgress((61 / 78) * 100)
+        File.Copy("res\zone\english\mp_kwai_load.u2l", gamepath & "zone\english\mp_kwai_load.ff", True)
+        BackgroundWorker1.ReportProgress((62 / 78) * 100)
+        File.Copy("res\zone\english\mp_makin.u2l", gamepath & "zone\english\mp_makin.ff", True)
+        BackgroundWorker1.ReportProgress((63 / 78) * 100)
+        File.Copy("res\zone\english\mp_makin_day.u2l", gamepath & "zone\english\mp_makin_day.ff", True)
+        BackgroundWorker1.ReportProgress((64 / 78) * 100)
+        File.Copy("res\zone\english\mp_makin_day_load.u2l", gamepath & "zone\english\mp_makin_day_load.ff", True)
+        BackgroundWorker1.ReportProgress((65 / 78) * 100)
+        File.Copy("res\zone\english\mp_nachtfeuer.u2l", gamepath & "zone\english\mp_nachtfeuer.ff", True)
+        BackgroundWorker1.ReportProgress((66 / 78) * 100)
+        File.Copy("res\zone\english\mp_nachtfeuer_load.u2l", gamepath & "zone\english\mp_nachtfeuer_load.ff", True)
+        BackgroundWorker1.ReportProgress((67 / 78) * 100)
+        File.Copy("res\zone\english\mp_outskirts.u2l", gamepath & "zone\english\mp_outskirts.ff", True)
+        BackgroundWorker1.ReportProgress((68 / 78) * 100)
+        File.Copy("res\zone\english\mp_roundhouse.u2l", gamepath & "zone\english\mp_roundhouse.ff", True)
+        BackgroundWorker1.ReportProgress((69 / 78) * 100)
+        File.Copy("res\zone\english\mp_seelow.u2l", gamepath & "zone\english\mp_seelow.ff", True)
+        BackgroundWorker1.ReportProgress((70 / 78) * 100)
+        File.Copy("res\zone\english\mp_shrine.u2l", gamepath & "zone\english\mp_shrine.ff", True)
+        BackgroundWorker1.ReportProgress((71 / 78) * 100)
+        File.Copy("res\zone\english\mp_stalingrad.u2l", gamepath & "zone\english\mp_stalingrad.ff", True)
+        BackgroundWorker1.ReportProgress((72 / 78) * 100)
+        File.Copy("res\zone\english\mp_stalingrad_load.u2l", gamepath & "zone\english\mp_stalingrad_load.ff", True)
+        BackgroundWorker1.ReportProgress((73 / 78) * 100)
+        File.Copy("res\zone\english\mp_suburban.u2l", gamepath & "zone\english\mp_suburban.ff", True)
+        BackgroundWorker1.ReportProgress((74 / 78) * 100)
+        File.Copy("res\zone\english\mp_subway.u2l", gamepath & "zone\english\mp_subway.ff", True)
+        BackgroundWorker1.ReportProgress((75 / 78) * 100)
+        File.Copy("res\zone\english\mp_subway_load.u2l", gamepath & "zone\english\mp_subway_load.ff", True)
+        BackgroundWorker1.ReportProgress((76 / 78) * 100)
+        File.Copy("res\zone\english\mp_vodka.u2l", gamepath & "zone\english\mp_vodka.ff", True)
+        BackgroundWorker1.ReportProgress((77 / 78) * 100)
+        File.Copy("res\zone\english\mp_vodka_load.u2l", gamepath & "zone\english\mp_vodka_load.ff", True)
+        BackgroundWorker1.ReportProgress((78 / 78) * 100)
+        reg.SetValue("version", "1.7")
+        BackgroundWorker1.Dispose()
     End Sub
 End Class

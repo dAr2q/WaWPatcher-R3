@@ -8,12 +8,12 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("WaWPatcher-R3")> 
+<Assembly: AssemblyTitle("WaWPatcher R3a")> 
 <Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WaWPatcher-R3")> 
-<Assembly: AssemblyCopyright("Copyright ©  2012")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyCompany("U2L-Gaming")> 
+<Assembly: AssemblyProduct("WaWPatcher R3a")> 
+<Assembly: AssemblyCopyright("Copyright © U2L-Gaming 2013")> 
+<Assembly: AssemblyTrademark("U2L-Gaming")> 
 
 <Assembly: ComVisible(False)>
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("3.0.2.0")> 
+<Assembly: AssemblyFileVersion("3.0.2.0")> 

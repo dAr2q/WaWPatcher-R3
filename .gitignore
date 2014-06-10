@@ -27,7 +27,14 @@ local.properties
 
 # PDT-specific
 .buildpath
+<<<<<<< HEAD
 
+=======
+*.exe
+*.u2l
+*.xml
+*.pdb
+>>>>>>> fertiges projekt
 
 #################
 ## Visual Studio
@@ -38,12 +45,17 @@ local.properties
 
 # User-specific files
 *.suo
+<<<<<<< HEAD
 .user
 *.sln.docstates
 .exe
 .pdb
 .xml
 .vshost.*
+=======
+*.user
+*.sln.docstates
+>>>>>>> fertiges projekt
 
 # Build results
 [Dd]ebug/
