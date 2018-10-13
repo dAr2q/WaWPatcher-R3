@@ -177,3 +177,8 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+.vs/WaWPatcher-R3/v15/Server/sqlite3/storage.ide-wal
+.vs/WaWPatcher-R3/v15/Server/sqlite3/db.lock
+.vs/WaWPatcher-R3/v15/Server/sqlite3/storage.ide
+.vs/WaWPatcher-R3/v15/Server/sqlite3/storage.ide-shm
+WaWPatcher-R3/U2LG.pfx

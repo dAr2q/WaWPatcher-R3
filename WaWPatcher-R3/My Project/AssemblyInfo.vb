@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("WaWPatcher R3a")> 
+<Assembly: AssemblyTitle("WaWPatcher R3b")>
 <Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("U2L-Gaming")> 
-<Assembly: AssemblyProduct("WaWPatcher R3a")> 
-<Assembly: AssemblyCopyright("Copyright © U2L-Gaming 2013")> 
+<Assembly: AssemblyCompany("U2L-Gaming")>
+<Assembly: AssemblyProduct("WaWPatcher R3b")>
+<Assembly: AssemblyCopyright("Copyright © U2L-Gaming 2018")>
 <Assembly: AssemblyTrademark("U2L-Gaming")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("44bd8b3a-d643-49f3-8a2e-5eefdc9a1f95")> 
+<Assembly: Guid("44bd8b3a-d643-49f3-8a2e-5eefdc9a1f95")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("3.0.2.0")> 
-<Assembly: AssemblyFileVersion("3.0.2.0")> 
+<Assembly: AssemblyVersion("3.0.2.2")>
+<Assembly: AssemblyFileVersion("3.0.2.2")>
